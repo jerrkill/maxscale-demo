@@ -20,7 +20,7 @@ docker-compose up -d
 # 查看端口
 netstat -ntelp
 # 连上maxscal
-mysql -h127.0.0.1 -P4006 -utest -p'test'
+mysql -h172.17.0.1 -P4006 -utest -p'test'
 
 ```
 
@@ -65,4 +65,14 @@ MariaDB [(none)]> select @@hostname;
 | 14b68c87afdf |
 +--------------+
 1 row in set (0.00 sec)
+```
+
+`docker ps`
+
+```
+CONTAINER ID        IMAGE                                            COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
+14b68c87afdf        mariadb:10.5.3                                   "docker-entrypoint.s…"   2 hours ago         Up 2 hours          3306/tcp                                                   mariadb-slave1
+6bb16cdd46e7        maxscale:latest                                  "/start"                 2 hours ago         Up 2 hours          172.17.0.1:4006->4006/tcp, 172.17.0.1:4008->4008/tcp, 6603/tcp   maxscale
+559164dfe84c        mariadb:10.5.3                                   "docker-entrypoint.s…"   2 hours ago         Up 2 hours          3306/tcp                                                   mariadb-slave2
+0022ab9d5fa2        mariadb:10.5.3                                   "docker-entrypoint.s…"   2 hours ago         Up 2 hours          3306/tcp                                                   mariadb-master
 ```
