@@ -1,0 +1,42 @@
+version: '2'
+services:
+    mariadb-master:
+        image: mariadb:10.5.3
+        container_name: mariadb-master
+        #ports:
+        #    - 172.17.0.1:3307:3306/tcp
+        environment: 
+            MYSQL_ROOT_PASSWORD: 123456
+        volumes:
+            - ./sql/master:/docker-entrypoint-initdb.d
+        command: mysqld --log-bin=mariadb-bin --binlog-format=ROW --server-id=3000
+    mariadb-slave1:
+        image: mariadb:10.5.3
+        container_name: mariadb-slave1
+        #ports:
+        #    - 172.17.0.1:3308:3306/tcp
+        environment: 
+            MYSQL_ROOT_PASSWORD: 123456
+        volumes:
+            - ./sql/slave:/docker-entrypoint-initdb.d
+        command: mysqld --log-bin=mariadb-bin --binlog-format=ROW --server-id=3001
+    mariadb-slave2:
+        image: mariadb:10.5.3
+        container_name: mariadb-slave2
+        #ports:
+        #    - 172.17.0.1:3309:3306/tcp
+        environment: 
+            MYSQL_ROOT_PASSWORD: 123456
+        volumes:
+            - ./sql/slave:/docker-entrypoint-initdb.d
+        command: mysqld --log-bin=mariadb-bin --binlog-format=ROW --server-id=3002
+    maxscale:
+        image: maxscale:latest
+        container_name: maxscale
+        volumes:
+            - ./maxscale.cnf.d:/etc/maxscale.cnf.d
+        ports:
+            - 172.17.0.1:4006:4006/tcp
+            - 172.17.0.1:6603:6603/tcp
+        privileged: true
+        restart: always
